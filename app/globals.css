@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   North Hanover Grille — Modern, Clean, Attractive
+   Dark-first professional restaurant aesthetic
+   ============================================ */
+
+:root {
+  /* North Hanover Grille brand palette — black, rich grays, signature deep maroon/brick */
+  --bg: #0f0f0f;
+  --surface: #1a1a1a;
+  --surface-elevated: #222222;
+  --border: #2f2f2f;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+
+  /* Brand maroon/brick red - previous stable version from the original site photo */
+  --accent: #6B1E3A;           /* Deep burgundy/brick red */
+  --accent-light: #8B2A4A;     /* Slightly richer for hover/active states */
+
+  /* Lighter grays kept for polish */
+  --text-secondary: #c7c7c7;
+  --text-muted: #6b7280;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+  --gold: #ca8a04;
+}
+
+body {
+  font-feature-settings: "kern" 1, "tnum" 1, "cv11" 1;
+}
+
+/* Beautiful typography */
+h1, h2, .heading, .section-title {
+  font-family: var(--font-serif, Georgia, serif);
+  font-feature-settings: "kern" 1, "dlig" 1;
+  color: #f5f5f5; /* ensure strong contrast */
+}
+
+/* More aggressive use of brand burgundy on headings and key text (cleaner than original) */
+h2.section-title,
+.section-title {
+  color: #f5f5f5;
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+/* Subtle premium feel with more burgundy presence */
+.card {
+  @apply bg-surface border border-border rounded-3xl overflow-hidden transition-all duration-300;
+}
+.card:hover {
+  @apply border-accent/40 shadow-card;
+  transform: translateY(-1px);
+}
+
+/* More aggressive burgundy accents on cards (polished, not basic like original) */
+.card-accent {
+  border-left: 4px solid var(--accent);
+}
+
+/* Reverted: Admin beer list rows back to normal dark surface/charcoal theme */
+.beer-admin-card {
+  background-color: var(--surface-elevated);
+  color: inherit;
+  border-color: var(--border);
+}
+
+.beer-admin-card:hover {
+  border-color: var(--accent) / 0.3;
+  transform: translateY(-1px);
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-medium transition-all active:scale-[0.985] disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply bg-accent text-white hover:bg-accent-light shadow-soft;
+  transition: background-color 0.2s ease;
+}
+
+.btn-secondary {
+  @apply bg-surface-elevated border border-border hover:bg-surface text-text-primary;
+}
+
+.btn-ghost {
+  @apply hover:bg-surface-elevated text-text-secondary hover:text-text-primary;
+}
+
+/* Elegant one-click visibility toggle (red/green) — now with stronger burgundy when active */
+.toggle {
+  @apply relative inline-flex h-9 w-[72px] items-center rounded-full border border-border bg-surface p-1 transition-all;
+}
+.toggle[data-visible="true"] {
+  border-color: var(--accent);
+  background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.toggle[data-visible="true"] {
+  @apply border-success/40 bg-success/10;
+}
+
+.toggle[data-visible="false"] {
+  @apply border-danger/40 bg-danger/10;
+}
+
+.toggle-thumb {
+  @apply flex h-7 w-7 items-center justify-center rounded-full bg-white text-[10px] font-medium shadow transition-all;
+}
+
+.toggle[data-visible="true"] .toggle-thumb {
+  @apply translate-x-8 text-success;
+}
+
+.toggle[data-visible="false"] .toggle-thumb {
+  @apply text-danger;
+}
+
+/* Menu & Beer cards */
+.beer-card, .menu-item {
+  @apply card p-6;
+}
+
+.beer-card img, .photo-thumb {
+  @apply transition-transform duration-500;
+}
+
+.beer-card:hover img {
+  transform: scale(1.04);
+}
+
+/* Admin photo library grid */
+.photo-grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4;
+}
+
+.photo-thumb {
+  @apply aspect-square rounded-2xl overflow-hidden border border-border bg-surface relative;
+}
+
+.photo-thumb.selected {
+  @apply ring-2 ring-accent border-accent;
+}
+
+/* Form styles - clean and modern */
+.input {
+  @apply w-full rounded-2xl border border-border bg-surface-elevated px-4 py-3 text-sm placeholder:text-text-muted focus:outline-none focus:border-accent/60 transition-colors;
+}
+
+.label {
+  @apply text-xs font-medium tracking-widest text-text-secondary uppercase mb-1.5 block;
+}
+
+/* Section headers */
+.section-title {
+  @apply text-4xl md:text-5xl font-semibold tracking-tighter;
+}
+
+/* Smooth mobile menu */
+.mobile-nav {
+  @apply fixed inset-0 z-50 bg-black/90 backdrop-blur-xl p-6 pt-20;
+}
+
+/* PWA / install prompt hint */
+.install-hint {
+  @apply text-[10px] uppercase tracking-[3px] text-text-muted;
+}
+
+/* Nice scrollbar for admin panels */
+.admin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #262626 #111111;
+}
+
+.admin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-scroll::-webkit-scrollbar-thumb {
+  background: #262626;
+  border-radius: 3px;
+}
+
+/* Toast overrides (sonner) */
+[data-sonner-toast] {
+  @apply rounded-2xl border-border bg-surface-elevated text-text-primary;
+}
+
+/* Subtle animations used throughout */
+.fade-in {
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.23, 1.0, 0.32, 1) both;
+}

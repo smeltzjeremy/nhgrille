@@ -1,0 +1,94 @@
+// North Hanover Grille - Prisma Schema
+// Modern, clean data model for beers, menu, photos, specials, and visibility controls
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum AssetFolder {
+  BEERS
+  MENU
+  SPECIALS
+  GENERAL
+}
+
+model Asset {
+  id        String       @id @default(cuid())
+  filename  String       // stored filename on disk e.g. "beer-abc123.jpg"
+  original  String       // original upload name for UX
+  folder    AssetFolder
+  path      String       // public path: "/uploads/beers/beer-abc123.jpg"
+  size      Int          // bytes
+  mimeType  String
+  createdAt DateTime     @default(now())
+
+  // Relations (optional for now - can attach to multiple items)
+  beers     Beer[]
+  menuItems MenuItem[]
+}
+
+model Beer {
+  id          String    @id @default(cuid())
+  name        String
+  type        String    // IPA, Lager, Stout, Cider, etc.
+  price       Float     // e.g. 7.50
+  description String?
+  abv         Float?    // alcohol by volume e.g. 5.8
+  imageUrl    String?   // can be external or /uploads/...
+  assetId     String?   // link to managed photo
+  isVisible   Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  asset       Asset?    @relation(fields: [assetId], references: [id], onDelete: SetNull)
+}
+
+model MenuCategory {
+  id        String      @id @default(cuid())
+  name      String      // Appetizers, Mains, Sides, Desserts, Drinks
+  sortOrder Int         @default(0)
+  isVisible Boolean     @default(true)
+  createdAt DateTime    @default(now())
+
+  items     MenuItem[]
+}
+
+model MenuItem {
+  id          String    @id @default(cuid())
+  categoryId  String
+  name        String
+  description String?
+  price       Float
+  assetId     String?   // optional photo from MENU folder
+  isVisible   Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  category    MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  asset       Asset?       @relation(fields: [assetId], references: [id], onDelete: SetNull)
+}
+
+model Special {
+  id          String    @id @default(cuid())
+  title       String    @default("Daily Specials")
+  pdfPath     String?   // "/uploads/specials/specials-2025-03-25.pdf"
+  isVisible   Boolean   @default(true)
+  activeFrom  DateTime? // optional scheduling
+  activeTo    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// Simple key-value settings for site content (hero text, about, etc.)
+model SiteSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
